@@ -1,0 +1,46 @@
+name: 'Conflict Notification'
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  schedule:
+    - cron: '0 * * * *' # This will run the check hourly; adjust as needed.
+
+jobs:
+  conflict_check:
+    runs_on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Ensure all branches are fetched
+
+      - name: Check for conflicts
+        id: conflicts
+        run: |
+          git fetch origin ${{ github.base_ref }}:${{ github.base_ref }} --depth=1
+          git fetch origin ${{ github.head_ref }}:${{ github.head_ref }} --depth=1
+          has_conflicts=false
+          if git merge-base --is-ancestor ${{ github.head_ref }} ${{ github.base_ref }}; then
+            echo "No conflicts with the base branch."
+          else
+            echo "::set-output name=conflict::true"
+            has_conflicts=true
+          fi
+          if $has_conflicts; then
+            echo "Merge conflicts detected!"
+          fi
+
+      - name: Comment on the pull request if conflicts are found
+        if: steps.conflicts.outputs.conflict == 'true'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const issue_number = context.payload.pull_request.number;
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue_number,
+              body: '⚠️ Merge conflicts detected! Please resolve the conflicts to continue with the review process.'
+            });
