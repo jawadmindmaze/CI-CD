@@ -1,1 +1,51 @@
 
+name: 'Stale PR Reminder'
+
+on:
+  schedule:
+    # This will run every day at 00:00 UTC.
+    - cron: '*/5 * * * *'
+
+jobs:
+  remind-stale-prs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Find stale pull requests
+        uses: actions/github-script@v5
+        with:
+          github-token: "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"
+          script: |
+            const now = new Date();
+            const daysAgo = days => new Date(now.getTime() - (days * 24 * 60 * 60 * 1000));
+            const staleDate = daysAgo(7);
+
+            const searchResults = await github.rest.search.issuesAndPullRequests({
+              q: `repo:${context.repo.owner}/${context.repo.repo} is:pr is:open updated:<${staleDate.toISOString().split('T')[0]}`
+            });
+
+            for (const pr of searchResults.data.items) {
+              const comments = await github.rest.issues.listComments({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number
+              });
+
+              const lastBotComment = comments.data
+                .reverse()
+                .find(comment => comment.user.type === 'Bot' && comment.body.includes('This PR has been inactive for'));
+
+              const lastCommentDate = lastBotComment ? new Date(lastBotComment.updated_at) : null;
+              const sevenDaysAgo = daysAgo(7);
+
+              if (!lastBotComment || lastCommentDate < sevenDaysAgo) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: pr.number,
+                  body: 'This PR has been inactive for over 7 days. Please address the necessary changes or discussions and move it forward.'
+                });
+              }
+            }
