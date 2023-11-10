@@ -4,7 +4,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   schedule:
-    - cron: '0 * * * *' # This will run the check hourly; adjust as needed.
+    # - cron: '0 * * * *' # This will run the check hourly; adjust as needed.
 
 jobs:
   conflict_check:
