@@ -3,7 +3,7 @@ name: 'Stale PR Reminder'
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    # - cron: '*/5 * * * *'
 
 jobs:
   remind-stale-prs:
