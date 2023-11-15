@@ -1,4 +1,4 @@
-name: 'Auto Add Issue to Project'
+name: Auto Add to Project
 
 on:
   issues:
@@ -8,30 +8,10 @@ jobs:
   add-to-project:
     runs-on: ubuntu-latest
     steps:
-      - name: Add issue to project
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const issue_number = context.issue.number;
-            const repository = context.repo.repo;
-            const owner = context.repo.owner;
-            const project_id = "YOUR_PROJECT_ID"; // Replace with your actual project ID
-            const column_id = "YOUR_COLUMN_ID"; // Replace with the column ID you want to add issues to
-
-            const query = `mutation ($project_id: ID!, $content_id: ID!) {
-              addProjectCard(input: {projectColumnId: $project_id, contentId: $content_id}) {
-                clientMutationId
-              }
-            }`;
-
-            const content_id = (await github.rest.issues.get({
-              owner,
-              repo: repository,
-              issue_number,
-            })).data.node_id;
-
-            await github.graphql(query, {
-              project_id: column_id,
-              content_id: content_id,
-            });
+    - name: Add to Project
+      uses: srggrs/assign-one-project-github-action@1.2.1
+      with:
+        project: 'testing'
+        column: 'To do'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
