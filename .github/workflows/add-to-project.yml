@@ -8,10 +8,10 @@ jobs:
   add-to-project:
     runs-on: ubuntu-latest
     steps:
-    - name: Add to Project
+    - name: Add issue to the Project
       uses: srggrs/assign-one-project-github-action@1.2.1
       with:
-        project: 'testing'
+        project: 'https://github.com/users/jawadmindmaze/projects/1'
         column_name: 'To do'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
