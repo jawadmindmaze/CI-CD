@@ -14,4 +14,4 @@ jobs:
         project: 'https://github.com/users/jawadmindmaze/projects/1'
         column_name: 'To do'
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MY_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
