@@ -12,6 +12,6 @@ jobs:
       uses: srggrs/assign-one-project-github-action@1.2.1
       with:
         project: 'testing'
-        column: 'To do'
+        column_name: 'To do'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
