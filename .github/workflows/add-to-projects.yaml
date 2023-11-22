@@ -9,12 +9,10 @@ on:
       - develop
 
 jobs:
-  assign-to-project:
+  add-issue:
     runs-on: ubuntu-latest
     steps:
-      - name: Assign issue to organization project
-        uses: skeet70/default-project-board-action@v1
-        with:
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          issue: ${{ github.event.issue.number }}
-          project: 1
+    - uses: actions/checkout@v2
+    - name: Add Issue
+      run: |
+        echo "Adding issue to repository..."
