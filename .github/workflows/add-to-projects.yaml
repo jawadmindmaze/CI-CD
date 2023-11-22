@@ -13,7 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Assign issue to organization project
-        uses: actions/add-to-project@v0.5.0
+        uses: skeet70/default-project-board-action@v1
         with:
-          project-url: 'https://github.com/users/jawadmindmaze/projects/1'
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          repository: ${{ github.repository }}
+          issue: ${{ github.event.issue.number }}
+          project: 1
