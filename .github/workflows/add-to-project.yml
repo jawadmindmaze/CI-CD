@@ -1,17 +1,65 @@
-name: Auto Add to Project
+name: Assign Issue to Project
 
 on:
-  issues:
-    types: [opened]
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+  push:
+    branches:
+      - develop
 
 jobs:
-  add-to-project:
+  assign-to-project:
     runs-on: ubuntu-latest
     steps:
-    - name: Add issue to the Project
-      uses: srggrs/assign-one-project-github-action@1.2.1
-      with:
-        project: 'https://github.com/users/jawadmindmaze/projects/1'
-        column_name: 'To do'
-      env:
-        MY_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Assign issue to organization project
+        uses: actions/add-to-project@v1
+        with:
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          organization: 'Sylvester-Team'
+          project_number: 2
+          item_number: ${{ github.event.issue.number || github.event.pull_request.number }}
+
+# name: Assign Issue to Project
+
+# on:
+#   pull_request:
+#     types: [opened, edited, synchronize, reopened]
+#   push:
+#     branches:
+#       - develop
+
+# jobs:
+#   assign-to-project:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Assign issue to organization project
+#         env:
+#           GH_PAT: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+#           ORGANIZATION: 'Sylvester-Team'
+#           PROJECT_NUMBER: '2'
+#         run: |
+#           # Install GitHub CLI
+#           curl -sSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+#           echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+#           sudo apt update
+#           sudo apt install gh
+
+#           # Login to GitHub CLI using the PAT
+#           echo "${GH_PAT}" | gh auth login --with-token
+
+#           # GraphQL mutation to add issue to the organization project
+#           QUERY=$(cat <<EOF
+#           mutation {
+#             addProjectV2ItemById(input: {projectId: "PROJECT_NUMBER", contentId: "${{ github.event.issue.node_id }}"}) {
+#               item {
+#                 id
+#               }
+#             }
+#           }
+#           EOF
+#           )
+
+#           QUERY="${QUERY//PROJECT_NUMBER/$PROJECT_NUMBER}" # Replace PROJECT_NUMBER with the actual number
+
+#           # Call GitHub API to add the issue to the project
+#           gh api graphql -f query="$QUERY"
