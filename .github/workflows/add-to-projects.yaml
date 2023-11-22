@@ -15,8 +15,5 @@ jobs:
       - name: Assign issue to organization project
         uses: actions/add-to-project@v0.4.1
         with:
-          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # Changed from github_token to github-token
-          organization: 'Sylvester-Team'
-          project_number: 2
           project-url: 'https://github.com/users/jawadmindmaze/projects/1'
-          item_number: ${{ github.event.issue.number || github.event.pull_request.number }}
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
