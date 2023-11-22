@@ -16,4 +16,4 @@ jobs:
         uses: actions/add-to-project@v0.5.0
         with:
           project-url: 'https://github.com/users/jawadmindmaze/projects/1'
-          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
