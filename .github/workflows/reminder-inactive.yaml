@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Reminder for Inactive PRs
-        uses: lee-dohm/issue-reminder@v1
+        uses: agrc/reminder-action@v1.0.11
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           days-before-reminder: 4
