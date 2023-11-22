@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Assign issue to organization project
-        uses: actions/add-to-project@v1
+        uses: actions/add-to-project@v0.4.1
         with:
           github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           organization: 'Sylvester-Team'
